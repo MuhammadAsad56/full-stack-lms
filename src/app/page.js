@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { auth } from "../../auth";
-import Header from "@/components/header/header";
+import Header from "@/components/header/Header";
+
 
 export default async function Home() {
   const session = await auth()
