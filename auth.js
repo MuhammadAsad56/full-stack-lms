@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/dbConnect"
 import { Users } from "@/lib/modals/user.modal"
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
+import Credentials from "next-auth/providers/credentials"
 
 const handleLoginUser = async (profile) => {
   await connectDB()
@@ -12,7 +13,6 @@ const handleLoginUser = async (profile) => {
     const obj = {
       fullname: profile.name,
       email: profile.email,
-      provider: "google",
       profileImg: profile.picture,
     }
     let newUser = await new Users(obj)
@@ -21,14 +21,39 @@ const handleLoginUser = async (profile) => {
   }
 }
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Google],
+  providers: [Google,
+     Credentials({
+    credentials: {
+      email: {},
+      password: {},
+    },
+    authorize: async (credentials) => {
+      let user = credentials
+      console.log("user>", user);
+      let res = await fetch('http://localhost:3000/api/users/login',{
+        method: "POST",
+        body: JSON.stringify({
+        email: user.email,
+        password: user.password,
+        provider: "crediential"
+        })
+      })
+      res = await res.json()
+      return {email: user.email}
+    },
+  }),
+],
   callbacks: {
     async signIn({ account, profile }) {
-      const user = await handleLoginUser(profile)
-      return {...profile, role: user.role} // Do different verification for other providers that don't have `email_verified`
+      if(account.provider == "google"){     
+        const user = await handleLoginUser(profile)
+        await Users.updateOne({email: user.email},{ provider: 'google'})
+        return {...profile, role: user.role}
+      }
+      return true
     },
     async jwt({ token }) {
-      const user = await handleLoginUser(token)
+      const user = await handleLoginUser({email: token.email})
       token._id = user._id
       token.role = user.role
       return token
