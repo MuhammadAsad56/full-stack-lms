@@ -5,8 +5,8 @@ export default async function SignIn() {
     const session = await auth()
     if(session) redirect('/')
   return (
-    <div className="container mx-auto flex flex-col gap-10 items-center justify-center h-screen">
-    <form
+    <div className="container mx-auto flex items-center justify-center h-screen">
+    {/* <form
     className="flex flex-col gap-3 border px-4 py-2"
     action={async (formData) => {
       "use server"
@@ -18,7 +18,7 @@ export default async function SignIn() {
      <div className="flex justify-center">
      <button className="border px-3 py-1" type="submit">Login</button>
      </div>
-    </form>
+    </form> */}
     <form
       action={async () => {
           "use server"
