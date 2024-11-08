@@ -27,11 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async signIn({ account, profile }) {
-      // if(account.provider == "google"){     
-        const user = await handleLoginUser(profile)
-        // await Users.updateOne({email: user.email},{ provider: 'google'})
-        return {...profile, role: user.role}
-      // }
+      await handleLoginUser(profile)
       return true
     },
     async jwt({ token }) {
