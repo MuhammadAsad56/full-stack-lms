@@ -32,6 +32,8 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import ButtonLoaderSpinner from "../ButtonLoaderSpinner"
+import { addCourses } from "@/actions/courses"
 
 export function AddCourseDrawer() {
   const [open, setOpen] = useState(false)
@@ -77,33 +79,60 @@ export function AddCourseDrawer() {
 }
 
 function CourseForm({ className }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+  const handleAddCourse = async (event) => {
+    setIsSubmitting(true)
+    event.preventDefault();
+    const formdata = new FormData(event.target);
+    const obj = {
+      title: formdata.get('title'),
+      description: formdata.get('description'),
+      eligibility: formdata.get('eligibility').split(','),
+      duration: formdata.get('duration'),
+      thumbnail: formdata.get('thumbnail'),
+    };
+    await addCourses(obj)
+    console.log("obj>", obj);
+    setIsSubmitting(false)
+    event.target.reset();
+  };
   return (
-    <form className={cn("grid items-start gap-4", className)}>
+    <form onSubmit={handleAddCourse} className={cn("grid items-start gap-4", className)}>
       <div className="grid gap-2">
-        <Label htmlFor="course">Course Name</Label>
-        <Input required type="text" id="course" defaultValue="" />
+        <Label htmlFor="course">Course Title</Label>
+        <Input required type="text" id="title" name="title" placeholder="Course Title" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="eligibility">Eligibility</Label>
+        <Input required id="eligibility" name={'eligibility'} placeholder="Eligibility" />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="duration">Duration</Label>
-        <Input required id="duration" defaultValue="" />
+        <Input type="text" required id="duration" name={'duration'} placeholder="Duration" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="thumbnail">Thumbnail</Label>
+        <Input type="url" required id="thumbnail" name={'thumbnail'} placeholder="Thumbnail" />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="description">Description</Label>
-        <textarea required id="description" defaultValue="" />
+        <textarea required id="description" name={'description'} placeholder="Description" />
       </div>
-      <div className="grid gap-2">
+      {/* <div className="grid gap-2">
         <Label htmlFor="status">Status</Label>
         <Select required>
           <SelectTrigger >
-            <SelectValue placeholder="Active - Not-Active" />
+            <SelectValue placeholder="Active - Not-Active " />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="not-active">Not-Active</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-      <Button type="submit">Add Course</Button>
+      </div> */}
+      <Button type="submit">{isSubmitting ? <ButtonLoaderSpinner/> : "Add Course"}</Button>
     </form>
   )
 }

@@ -8,7 +8,7 @@ export default function Batches() {
                 <h1 className="text-center text-2xl my-10 font-bold">Batches</h1>
                 <AddBatchDrawer />
             </div>
-            <BatchTable />
+            <BatchTable/>
         </div>
     )
 }

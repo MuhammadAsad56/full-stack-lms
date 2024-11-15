@@ -36,31 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-const data  = [
-  {
-    courseTitle: "Web and App Development",
-    id: "m5gr84i9",
-    status: "active",
-    duration: "1 Year",
-    description: "Make Students complete Web and App development from Scratch"
-  },
-  {
-    courseTitle: "Graphic Designing",
-    id: "3u1reuv4",
-    status: "no-active",
-    duration: "6 Months",
-    description: "Make Students completeGraphic designer from Scratch"
-  },
-  {
-    courseTitle: "Video Editing",
-    id: "derv1ws0",
-    status: "active",
-    duration: "6 Months",
-    description: "Make Students complete video editor from Scratch"
-  },
-]
-
+import Image from "next/image"
 
 export const columns = [
   {
@@ -75,6 +51,8 @@ export const columns = [
         aria-label="Select all"
       />
     ),
+
+
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -86,26 +64,19 @@ export const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    accessorKey: "thumbnail",
+    header: "Thumbnail",
+    cell: ({ row }) =>  <div><img width={80} height={50} src={row.getValue("thumbnail")}/></div>,
   },
   {
-    accessorKey: "courseTitle",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Course
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("courseTitle")}</div>,
+    accessorKey: "title",
+    header: "Course" ,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("title")}</div>,
+  },
+  {
+    accessorKey: "eligibility",
+    header: "Eligibility",
+    cell: ({ row }) => <div>{row.getValue("eligibility").join(", ")}</div>
   },
   {
     accessorKey: "description",
@@ -152,14 +123,14 @@ export const columns = [
   },
 ]
 
-export function CourseTable() {
+export function CourseTable({courses}) {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [columnVisibility, setColumnVisibility] = useState({})
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data,
+    data: courses,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -182,9 +153,9 @@ export function CourseTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter course..."
-          value={(table.getColumn("course")?.getFilterValue()) ?? ""}
+          value={(table.getColumn("title")?.getFilterValue()) ?? ""}
           onChange={(course) =>
-            table.getColumn("course")?.setFilterValue(course.target.value)
+            table.getColumn("title")?.setFilterValue(course.target.value)
           }
           className="max-w-sm"
         />

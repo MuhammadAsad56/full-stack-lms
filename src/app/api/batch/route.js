@@ -9,7 +9,7 @@ export async function GET(request) {
     if(searchParams.get("course")){
      query.course = searchParams.get("course")
     }
-    const batch = await BatchModal.find(query).populate("course", "title")
+    const batch = await BatchModal.find(query).populate("course", "title")  
     return Response.json(
         { batch, msg: "betch fetched successfully" }, { status: 200 })
 }
