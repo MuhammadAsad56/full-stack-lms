@@ -1,5 +1,7 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 
 export async function getCourses(){
     let courses = await fetch(`${process.env.BASE_URL}api/course`)
@@ -12,4 +14,5 @@ export async function addCourses(obj){
         method: "POST",
         body: JSON.stringify(obj)
     })
+    revalidatePath('/admin/courses')
 }

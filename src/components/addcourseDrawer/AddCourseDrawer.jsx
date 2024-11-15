@@ -94,7 +94,6 @@ function CourseForm({ className }) {
       thumbnail: formdata.get('thumbnail'),
     };
     await addCourses(obj)
-    console.log("obj>", obj);
     setIsSubmitting(false)
     event.target.reset();
   };
@@ -118,7 +117,7 @@ function CourseForm({ className }) {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="description">Description</Label>
-        <textarea required id="description" name={'description'} placeholder="Description" />
+        <textarea className="px-2" required id="description" name={'description'} placeholder="Description" />
       </div>
       {/* <div className="grid gap-2">
         <Label htmlFor="status">Status</Label>
