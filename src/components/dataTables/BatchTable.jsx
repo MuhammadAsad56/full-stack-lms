@@ -37,35 +37,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-// Sample data for the BatchTable
-const data  = [
-  {
-    batchName: "Batch 1",
-    status: "ongoing",
-    trainer: "John Doe",
-    noOfStudents: 25,
-    course: "Web Development",
-  },
-  {
-    batchName: "Batch 2",
-    status: "pending",
-    trainer: "Jane Smith",
-    noOfStudents: 18,
-    course: "Graphic Design",
-  },
-  {
-    batchName: "Batch 3",
-    status: "completed",
-    trainer: "Alice Johnson",
-    noOfStudents: 30,
-    course: "Video Editing",
-  },
-]
-
 // Define columns for the BatchTable
 export const columns = [
   {
-    accessorKey: "batchName",
+    accessorKey: "title",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -75,7 +50,12 @@ export const columns = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("batchName")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("title")}</div>,
+  },
+  {
+    accessorKey: "course",
+    header: "Course",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("course")?.title}</div>,
   },
   {
     accessorKey: "status",
@@ -83,30 +63,20 @@ export const columns = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
   },
   {
-    accessorKey: "trainer",
-    header: "Trainer",
-    cell: ({ row }) => <div>{row.getValue("trainer")}</div>,
-  },
-  {
-    accessorKey: "noOfStudents",
-    header: () => <div className="text-right">No. of Students</div>,
-    cell: ({ row }) => <div className="text-right">{row.getValue("noOfStudents")}</div>,
-  },
-  {
-    accessorKey: "course",
-    header: "Course",
-    cell: ({ row }) => <div>{row.getValue("course")}</div>,
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("description")}</div>,
   },
 ]
 
-export function BatchTable() {
+export function BatchTable({ data }) {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [columnVisibility, setColumnVisibility] = useState({})
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data,
+    data: data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -130,9 +100,9 @@ export function BatchTable() {
         {/* Filter for Batch Name */}
         <Input
           placeholder="Filter batch name..."
-          value={(table.getColumn("batchName")?.getFilterValue()) ?? ""}
-          onChange={(e) =>
-            table.getColumn("batchName")?.setFilterValue(e.target.value)
+          value={(table.getColumn("title")?.getFilterValue()) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -140,11 +110,12 @@ export function BatchTable() {
         <Input
           placeholder="Filter course name..."
           value={(table.getColumn("course")?.getFilterValue()) ?? ""}
-          onChange={(e) =>
-            table.getColumn("course")?.setFilterValue(e.target.value)
+          onChange={(event) =>
+            table.getColumn("course")?.setFilterValue(event.target.value)
           }
           className="max-w-sm ml-4"
         />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -183,9 +154,9 @@ export function BatchTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -194,7 +165,7 @@ export function BatchTable() {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows?.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}

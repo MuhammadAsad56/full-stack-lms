@@ -30,12 +30,10 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { addBatch } from "@/actions/batches"
+import ButtonLoaderSpinner from "../ButtonLoaderSpinner"
 
-// Mock Data for Trainers and Courses
-const trainers = ["John Doe", "Jane Smith", "Mike Johnson"]
-const courses = ["Web Development", "Graphic Designing", "Video Editing"]
-
-export function AddBatchDrawer() {
+export function AddBatchDrawer({courses}) {
   const [open, setOpen] = useState(false)
   const isDesktop = true
 
@@ -49,7 +47,7 @@ export function AddBatchDrawer() {
           <DialogHeader>
             <DialogTitle>Add Batch</DialogTitle>
           </DialogHeader>
-          <BatchForm />
+          <BatchForm courses={courses} />
         </DialogContent>
       </Dialog>
     )
@@ -75,67 +73,51 @@ export function AddBatchDrawer() {
   )
 }
 
-function BatchForm({ className }) {
+function BatchForm({ className , courses}) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddBatch = async (event) => {
+    setIsSubmitting(true)
+  event.preventDefault()
+  const formData = new FormData(event.target)
+  const obj = {
+    title: formData.get('title'),
+    description: formData.get('description'),
+    course: formData.get('course')
+  }
+  await addBatch(obj)
+  setIsSubmitting(false)
+  event.target.reset();
+  }
+  
   return (
-    <form className={cn("grid items-start gap-4", className)}>
+    <form onSubmit={handleAddBatch} className={cn("grid items-start gap-4", className)}>
       <div className="grid gap-2">
         <Label htmlFor="batch-name">Batch Name</Label>
-        <Input required type="text" id="batch-name" defaultValue="" />
-      </div>
-      
-      <div className="grid gap-2">
-        <Label htmlFor="status">Status</Label>
-        <Select required>
-          <SelectTrigger>
-            <SelectValue placeholder="Select status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="ongoing">Ongoing</SelectItem>
-            <SelectItem value="merged">Merged</SelectItem>
-          </SelectContent>
-        </Select>
+        <Input required type="text" name="title" id="batch-name" placeholder="Batch Name" />
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="trainer">Trainer</Label>
-        <Select required>
-          <SelectTrigger>
-            <SelectValue placeholder="Select trainer" />
-          </SelectTrigger>
-          <SelectContent>
-            {trainers.map((trainer, index) => (
-              <SelectItem key={index} value={trainer}>
-                {trainer}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid gap-2">
-        <Label htmlFor="no-of-students">No of Students</Label>
-        <Input required type="number" id="no-of-students" defaultValue="" />
+        <Label htmlFor="no-of-students">Description</Label>
+        <textarea className="px-2" name="description" required type="text" id="description" placeholder="Description" />
       </div>
 
       <div className="grid gap-2">
         <Label htmlFor="course">Course</Label>
-        <Select required>
+        <Select required name="course">
           <SelectTrigger>
             <SelectValue placeholder="Select course" />
           </SelectTrigger>
           <SelectContent>
-            {courses.map((course, index) => (
-              <SelectItem key={index} value={course}>
-                {course}
+            {courses?.map((course, index) => (
+              <SelectItem key={index} value={course._id}>
+                {course.title}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
-
-      <Button type="submit">Add Batch</Button>
+      <Button type="submit">{isSubmitting ? <ButtonLoaderSpinner/> : 'Add Batch'}</Button>
     </form>
   )
 }

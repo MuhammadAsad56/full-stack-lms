@@ -154,8 +154,8 @@ export function CourseTable({courses}) {
         <Input
           placeholder="Filter course..."
           value={(table.getColumn("title")?.getFilterValue()) ?? ""}
-          onChange={(course) =>
-            table.getColumn("title")?.setFilterValue(course.target.value)
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

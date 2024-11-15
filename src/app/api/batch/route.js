@@ -10,9 +10,9 @@ export async function GET(request) {
     if(searchParams.get("course")){
      query.course = searchParams.get("course")
     }
-    const batch = await BatchModal.find(query).populate("course", "title")  
+    const batches = await BatchModal.find(query).populate("course", "title")  
     return Response.json(
-        { batch, msg: "betch fetched successfully" }, { status: 200 })
+        { batches, msg: "betch fetched successfully" }, { status: 200 })
 }
 export async function POST(request) {
     await connectDB()
