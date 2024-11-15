@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/dbConnect";
 import { BatchModal } from "@/lib/modals/batch.modal";
+import { CourseModal } from "@/lib/modals/course.modal";
 
 export async function GET(request) {
     await connectDB()
