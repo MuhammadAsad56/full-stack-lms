@@ -4,7 +4,7 @@ const admissionSchema = new mongoose.Schema({
     course : {type: mongoose.Schema.Types.ObjectId, ref: "Course"},
     batch : {type: mongoose.Schema.Types.ObjectId, ref: "Batch"},
     status :{type: String, default : "pending", enum: ["pending", "open","close"]},
-    stratDate: String,
+    startDate: String,
     endDate : String
 
 })

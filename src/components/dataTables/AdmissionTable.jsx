@@ -3,10 +3,6 @@
 import * as React from "react"
 import { useState } from "react"
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -17,14 +13,10 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -36,6 +28,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Checkbox } from "@/components/ui/checkbox"
+
 
 // Define columns for the BatchTable
 export const columns = [
@@ -62,22 +56,22 @@ export const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: "title",
+    accessorKey: "course",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Batch Name
+        Course Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("title")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("course")?.title}</div>,
   },
   {
-    accessorKey: "course",
-    header: "Course",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("course")?.title}</div>,
+    accessorKey: "batch",
+    header: "Batch",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("batch")?.title}</div>,
   },
   {
     accessorKey: "status",
@@ -85,13 +79,18 @@ export const columns = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("description")}</div>,
+    accessorKey: "stratDate",
+    header: "Strat-Date",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("stratDate")}</div>,
+  },
+  {
+    accessorKey: "endDate",
+    header: "End-Date",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("endDate")}</div>,
   },
 ]
 
-export function BatchTable({ data }) {
+export function AdmissionTable({ data }) {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [columnVisibility, setColumnVisibility] = useState({})
