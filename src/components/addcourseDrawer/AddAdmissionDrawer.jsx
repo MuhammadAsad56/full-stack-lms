@@ -90,7 +90,6 @@ function AdmissionForm({ className , courses, batches}) {
     startDate: formData.get('startDate'),
     endDate: formData.get('endDate')
   }
-  console.log("obj>" , obj);
   await addAdmission(obj)
   setIsSubmitting(false)
   event.target.reset();
@@ -123,7 +122,8 @@ function AdmissionForm({ className , courses, batches}) {
                <SelectValue placeholder="Select batch" />
              </SelectTrigger>
              <SelectContent>
-               {batches?.filter(data => data.course._id == chosenCourse)
+               {batches?.
+               filter(data => data.course._id == chosenCourse)
                .map((batch, index) => (
                  <SelectItem key={index} value={batch._id}>
                    {batch.title}
@@ -136,11 +136,11 @@ function AdmissionForm({ className , courses, batches}) {
       }
       <div className="grid gap-2">
         <Label htmlFor="no-of-students">Start Date</Label>
-        <Input className="px-2" name="startDate" required type="date" id="startDate" placeholder="Start-Date" />
+        <Input className="px-2" name="startDate" required type="date" id="startDate" />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="no-of-students">End Date</Label>
-        <Input className="px-2" name="endDate" required type="date" id="endDate" placeholder="End-Date" />
+        <Input className="px-2" name="endDate" required type="date" id="endDate" />
       </div>
       <Button type="submit">{isSubmitting ? <ButtonLoaderSpinner/> : 'Add Batch'}</Button>
     </form>

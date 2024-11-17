@@ -1,7 +1,7 @@
 "use server"
 
-export async function getAdmissions(){
-    let admissions = await fetch(`${process.env.BASE_URL}api/admission`)
+export async function getAdmissions(status = ""){
+    let admissions = await fetch(`${process.env.BASE_URL}api/admission${status &&'?status='+status}`)
     admissions = await admissions.json()
     return admissions
 }

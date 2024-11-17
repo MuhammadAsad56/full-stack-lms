@@ -15,8 +15,11 @@ export async function GET(request) {
         if(searchParams.get("batch")){
          query.batch = searchParams.get("batch")
         }
+        if(searchParams.get("status")){
+         query.status = searchParams.get("status")
+        }
         const admissions = await AdmissionModal.find(query)
-        .populate("course", "title") 
+        .populate("course", "title description") 
         .populate("batch", "title") 
         return Response.json(
             { admissions, msg: "Admissions fetched successfully" }, { status: 200 }) 
